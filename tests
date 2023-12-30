@@ -1,0 +1,64 @@
+```python
+# tests/test_ai_model.py
+import numpy as np
+import pytest
+from ai_model import AIModel
+
+def test_ai_model():
+    # Initialize the model
+    model = AIModel(input_dim=10)
+
+    # Create dummy data
+    X = np.random.rand(100, 10)
+    y = np.random.randint(0, 2, 100)
+
+    # Train the model
+    model.train_model(X, y)
+
+    # Predict
+    predictions = model.predict(X)
+
+    # Check if the predictions have the same length as the input
+    assert len(predictions) == len(X)
+
+
+# tests/test_utils.py
+import pandas as pd
+import pytest
+from utils import load_data, preprocess_data, save_model, load_model
+
+def test_load_data():
+    # Create a dummy csv file
+    df = pd.DataFrame({'A': range(1, 6), 'B': range(6, 11)})
+    df.to_csv('dummy.csv', index=False)
+
+    # Load the data
+    data = load_data('dummy.csv')
+
+    # Check if the data is loaded correctly
+    assert data.equals(df)
+
+def test_preprocess_data():
+    # Create a dummy dataframe
+    df = pd.DataFrame({'A': range(1, 6), 'B': range(6, 11), 'target': [0, 1, 0, 1, 0]})
+
+    # Preprocess the data
+    X, y = preprocess_data(df, 'target')
+
+    # Check if the preprocessing is done correctly
+    assert len(X) == len(df) and len(y) == len(df)
+
+def test_save_and_load_model():
+    # Initialize the model
+    model = AIModel(input_dim=10)
+
+    # Save the model
+    save_model(model.model, 'dummy_model.h5')
+
+    # Load the model
+    loaded_model = load_model('dummy_model.h5')
+
+    # Check if the loaded model has the same configuration as the original model
+    assert model.model.get_config() == loaded_model.get_config()
+```
+
